@@ -3,7 +3,8 @@
 ## ✅ Checklist de Deploy
 
 ### 1. Verificar Build Local
-- [x] Arquivo `.htaccess` existe em `dist/`
+- [x] Arquivo `.htaccess` existe em `dist/` (1.4 KB)
+- [x] Arquivo `index.php` existe em `dist/` (500 bytes) - FALLBACK
 - [x] Arquivo `index.html` existe em `dist/`
 - [x] Pasta `assets/` existe em `dist/`
 
@@ -11,12 +12,20 @@
 
 **IMPORTANTE:** Você deve fazer upload de TODO o conteúdo da pasta `dist/` para o diretório `/new/` no servidor.
 
+**ARQUIVOS CRÍTICOS QUE DEVEM SER ENVIADOS:**
+- ✅ `.htaccess` (1.4 KB) - Configuração de roteamento
+- ✅ `index.php` (500 bytes) - Fallback caso .htaccess não funcione
+- ✅ `index.html` - Aplicação React
+- ✅ `_redirects` - Para Netlify (pode ignorar na Hostinger)
+- ✅ pasta `assets/` completa
+
 #### Via File Manager (Painel Hostinger):
 1. Acesse o File Manager
 2. Navegue até o diretório `/new/` (ou crie se não existir)
 3. **DELETE todos os arquivos antigos** em `/new/`
 4. Faça upload de TODOS os arquivos de `dist/`:
-   - `.htaccess` ← MUITO IMPORTANTE!
+   - **`.htaccess`** ← MUITO IMPORTANTE! (pode estar oculto)
+   - **`index.php`** ← FALLBACK IMPORTANTE!
    - `_redirects`
    - `index.html`
    - pasta `assets/` (com todo o conteúdo)
