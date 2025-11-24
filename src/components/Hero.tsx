@@ -36,7 +36,7 @@ export const Hero = () => {
                     </h1>
                     <p className="text-gray-300 text-lg mb-8 max-w-lg leading-relaxed">
                         Sua jornada para uma vida mais saudável começa aqui!
-                        Estrutura completa, profissionais dedicados e o ambiente perfeito para você evoluir.
+                        Estrutura completa, profissionais dedicados e o ambiente perfeito para você evoluir mais.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4">
                         <motion.a
