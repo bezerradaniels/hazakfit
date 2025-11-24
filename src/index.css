@@ -9,6 +9,10 @@
     --font-sans: "Stack Sans Headline", sans-serif;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     @apply bg-dark text-white font-sans antialiased;
 }

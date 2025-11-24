@@ -1,38 +1,11 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Star, Calendar, Zap, Trophy, MessageCircle } from 'lucide-react';
-
-type PlanDuration = 'monthly' | 'quarterly' | 'yearly';
+import { Check, Star, MessageCircle } from 'lucide-react';
+import { usePlans, type PlanDuration } from '../context/PlansContext';
 
 export const Plans = () => {
+    const { plans } = usePlans();
     const [activePlan, setActivePlan] = useState<PlanDuration>('monthly');
-
-    const plans = [
-        {
-            id: 'monthly',
-            name: 'Mensal',
-            icon: Calendar,
-            price: '89,90',
-            features: ['Acesso total à academia', 'Sem taxa de matrícula', 'Acompanhamento profissional', 'Horário livre', 'Sem fidelidade'],
-            highlight: false
-        },
-        {
-            id: 'quarterly',
-            name: 'Trimestral',
-            icon: Zap,
-            price: '79,90',
-            features: ['Acesso total à academia', 'Sem taxa de matrícula', 'Acompanhamento profissional', 'Horário livre', 'Contrato de 3 meses'],
-            highlight: false
-        },
-        {
-            id: 'yearly',
-            name: 'Anual',
-            icon: Trophy,
-            price: '69,90',
-            features: ['Acesso total à academia', 'Sem taxa de matrícula', 'Acompanhamento profissional', 'Horário livre', 'Melhor custo-benefício'],
-            highlight: true
-        }
-    ];
 
     const PlanCard = ({ plan, isMobile = false }: { plan: typeof plans[0], isMobile?: boolean }) => (
         <motion.div
@@ -152,7 +125,7 @@ export const Plans = () => {
                         className="inline-flex items-center gap-2 px-8 py-4 bg-green-600 hover:bg-green-500 text-white rounded-full font-bold transition-all duration-300 shadow-lg hover:shadow-green-500/25"
                     >
                         <MessageCircle size={20} />
-                        Conhecer outros planos (Casal, Família, etc)
+                        Conhecer outros planos
                     </a>
                 </div>
             </div>

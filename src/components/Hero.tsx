@@ -49,13 +49,14 @@ export const Hero = () => {
                         >
                             Fazer Matrícula
                         </motion.a>
-                        <motion.button
+                        <motion.a
+                            href="#plans"
                             whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.1)" }}
                             whileTap={{ scale: 0.95 }}
-                            className="px-8 py-4 rounded-full font-bold text-lg text-white border border-white/30 hover:border-white transition-colors"
+                            className="px-8 py-4 rounded-full font-bold text-lg text-white border border-white/30 hover:border-white transition-colors inline-block text-center"
                         >
                             Conhecer Planos
-                        </motion.button>
+                        </motion.a>
                     </div>
                 </motion.div>
             </div>

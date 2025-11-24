@@ -1,13 +1,17 @@
 import { motion } from 'framer-motion';
-import fitnessWoman from '../assets/fitness_woman_transparent.png';
+import bgImage from '../assets/img/operating-hours-bg.png';
 
 export function OperatingHours() {
     return (
-        <section className="py-20 bg-dark relative overflow-hidden">
-            {/* Background decoration */}
-            <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-                <div className="absolute right-0 top-0 w-96 h-96 bg-primary rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
-                <div className="absolute left-0 bottom-0 w-96 h-96 bg-primary rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2"></div>
+        <section className="py-24 relative overflow-hidden min-h-[600px] flex items-center">
+            {/* Background Image with Overlay */}
+            <div className="absolute inset-0 z-0">
+                <img
+                    src={bgImage}
+                    alt="Background Gym"
+                    className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/80 to-black/60" />
             </div>
 
             <div className="container mx-auto px-4 relative z-10">
@@ -21,97 +25,75 @@ export function OperatingHours() {
                     <span className="text-white">de Funcionamento</span>
                 </motion.h2>
 
-                <div className="flex flex-col lg:flex-row items-end justify-center gap-8 lg:gap-16">
-                    <div className="w-full lg:w-1/2 max-w-2xl space-y-6">
-                        {/* Monday to Friday */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            className="w-full"
-                        >
-                            <div className="rounded-2xl overflow-hidden shadow-lg transform hover:scale-[1.02] transition-transform duration-300">
-                                <div className="bg-white py-2 px-6 text-center">
-                                    <h3 className="text-dark font-black text-xl md:text-2xl uppercase tracking-wider">Segunda a Sexta</h3>
-                                </div>
-                                <div className="bg-primary py-4 px-6 text-center">
-                                    <p className="text-dark font-black text-2xl md:text-3xl">
-                                        <span className="text-xl md:text-2xl font-bold mr-2">DAS</span>
-                                        05h
-                                        <span className="text-xl md:text-2xl font-bold mx-3">ÀS</span>
-                                        22h
-                                    </p>
-                                </div>
-                            </div>
-                        </motion.div>
-
-                        {/* Saturday */}
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: 0.2 }}
-                            className="w-full"
-                        >
-                            <div className="rounded-2xl overflow-hidden shadow-lg transform hover:scale-[1.02] transition-transform duration-300 flex flex-col">
-                                <div className="bg-white py-2 px-6 text-center">
-                                    <h3 className="text-dark font-black text-xl md:text-2xl uppercase tracking-wider">Aos Sábados</h3>
-                                </div>
-                                <div className="bg-primary py-4 px-6 text-center flex-1 flex flex-col justify-center items-center">
-                                    <p className="text-dark font-black text-2xl md:text-3xl mb-1">
-                                        <span className="text-lg font-bold mr-1">DAS</span>
-                                        08h
-                                        <span className="text-lg font-bold mx-2">ÀS</span>
-                                        11h
-                                    </p>
-                                    <p className="text-dark font-black text-2xl md:text-3xl">
-                                        <span className="text-lg font-bold mr-1">DAS</span>
-                                        15h
-                                        <span className="text-lg font-bold mx-2">ÀS</span>
-                                        18h
-                                    </p>
-                                </div>
-                            </div>
-                        </motion.div>
-
-                        {/* Sunday */}
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: 0.2 }}
-                            className="w-full"
-                        >
-                            <div className="rounded-2xl overflow-hidden shadow-lg transform hover:scale-[1.02] transition-transform duration-300 flex flex-col">
-                                <div className="bg-white py-2 px-6 text-center">
-                                    <h3 className="text-dark font-black text-xl md:text-2xl uppercase tracking-wider">Aos Domingos</h3>
-                                </div>
-                                <div className="bg-primary py-4 px-6 text-center flex-1 flex flex-col justify-center items-center">
-                                    <p className="text-dark font-black text-2xl md:text-3xl">
-                                        <span className="text-lg font-bold mr-1">DAS</span>
-                                        08h
-                                        <span className="text-lg font-bold mx-2">ÀS</span>
-                                        11h
-                                    </p>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </div>
-
-                    {/* Image Section */}
+                <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Monday to Friday */}
                     <motion.div
-                        initial={{ opacity: 0, x: 50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="w-full"
+                    >
+                        <div className="rounded-2xl overflow-hidden shadow-lg transform hover:scale-[1.02] transition-transform duration-300 h-full flex flex-col">
+                            <div className="bg-white py-3 px-6 text-center">
+                                <h3 className="text-dark font-black text-xl uppercase tracking-wider">Segunda a Sexta</h3>
+                            </div>
+                            <div className="bg-primary/90 backdrop-blur-sm py-8 px-6 text-center flex-1 flex flex-col justify-center">
+                                <p className="text-dark font-black text-3xl flex items-center justify-center gap-2">
+                                    <span className="text-xl font-bold">DAS</span>
+                                    05h
+                                    <span className="text-xl font-bold">ÀS</span>
+                                    22h
+                                </p>
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    {/* Saturday */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.2 }}
+                        className="w-full"
+                    >
+                        <div className="rounded-2xl overflow-hidden shadow-lg transform hover:scale-[1.02] transition-transform duration-300 h-full flex flex-col">
+                            <div className="bg-white py-3 px-6 text-center">
+                                <h3 className="text-dark font-black text-xl uppercase tracking-wider">Aos Sábados</h3>
+                            </div>
+                            <div className="bg-primary/90 backdrop-blur-sm py-8 px-6 text-center flex-1 flex flex-col justify-center">
+                                <div className="mb-4">
+                                    <span className="text-dark font-bold block text-sm mb-1">MANHÃ</span>
+                                    <p className="text-dark font-black text-2xl">08h às 11h</p>
+                                </div>
+                                <div>
+                                    <span className="text-dark font-bold block text-sm mb-1">TARDE</span>
+                                    <p className="text-dark font-black text-2xl">15h às 18h</p>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    {/* Sunday */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.4 }}
-                        className="hidden lg:block lg:w-1/2 relative h-full self-end"
+                        className="w-full"
                     >
-                        <img
-                            src={fitnessWoman}
-                            alt="Mulher fitness"
-                            className="w-full h-auto max-h-[500px] object-contain object-bottom mx-auto"
-                            style={{ marginBottom: '-5rem' }}
-                        />
+                        <div className="rounded-2xl overflow-hidden shadow-lg transform hover:scale-[1.02] transition-transform duration-300 h-full flex flex-col">
+                            <div className="bg-white py-3 px-6 text-center">
+                                <h3 className="text-dark font-black text-xl uppercase tracking-wider">Aos Domingos</h3>
+                            </div>
+                            <div className="bg-primary/90 backdrop-blur-sm py-8 px-6 text-center flex-1 flex flex-col justify-center">
+                                <p className="text-dark font-black text-3xl flex items-center justify-center gap-2">
+                                    <span className="text-xl font-bold">DAS</span>
+                                    08h
+                                    <span className="text-xl font-bold">ÀS</span>
+                                    11h
+                                </p>
+                            </div>
+                        </div>
                     </motion.div>
                 </div>
             </div>

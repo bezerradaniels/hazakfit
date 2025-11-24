@@ -1,18 +1,16 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import img1 from '../assets/img/1.png';
-import img2 from '../assets/img/2.png';
-import img3 from '../assets/img/3.png';
-import img4 from '../assets/img/4.png';
-import img5 from '../assets/img/5.png';
-import img6 from '../assets/img/6.png';
-
-const images = [img1, img2, img3, img4, img5, img6];
+import { useGallery } from '../context/GalleryContext';
 
 export const Gallery = () => {
+    const { images } = useGallery();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [direction, setDirection] = useState(0);
+
+    if (images.length === 0) {
+        return null;
+    }
 
     const slideVariants = {
         enter: (direction: number) => ({
