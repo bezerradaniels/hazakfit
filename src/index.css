@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+    --color-primary: #FFD700;
+    /* Gold/Yellow from image */
+    --color-primary-hover: #E6C200;
+    --color-dark: #111111;
+    --color-dark-lighter: #1a1a1a;
+    --font-sans: "Stack Sans Headline", sans-serif;
+}
+
+body {
+    @apply bg-dark text-white font-sans antialiased;
+}
