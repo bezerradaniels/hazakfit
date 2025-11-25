@@ -13,7 +13,7 @@ export const Footer = () => {
                                 <Phone size={24} />
                             </div>
                             <h3 className="font-bold text-xl mb-2">Whatsapp</h3>
-                            <p className="text-gray-600">(77) 99999-9999</p>
+                            <p className="text-gray-600">(77) 99862-0419</p>
                         </div>
 
                         <div className="bg-white p-8 rounded-3xl shadow-lg hover:-translate-y-2 transition-transform duration-300">
@@ -21,7 +21,7 @@ export const Footer = () => {
                                 <MapPin size={24} />
                             </div>
                             <h3 className="font-bold text-xl mb-2">Endereço</h3>
-                            <p className="text-gray-600">Av. Manoel Novais, 123<br />Bom Jesus da Lapa - BA</p>
+                            <p className="text-gray-600">Av. Agenor Magalhães, 333<br />Bom Jesus da Lapa - BA</p>
                         </div>
 
                         <div className="bg-white p-8 rounded-3xl shadow-lg hover:-translate-y-2 transition-transform duration-300">
