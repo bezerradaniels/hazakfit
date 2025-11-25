@@ -45,7 +45,7 @@ export const Gallery = () => {
     };
 
     return (
-        <section id="structure" className="py-20 bg-white overflow-hidden">
+        <section id="structure" className="py-[1em] bg-white overflow-hidden">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl font-bold text-black mb-4">Conheça Nossa Estrutura</h2>

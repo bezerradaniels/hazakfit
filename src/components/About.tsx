@@ -2,7 +2,7 @@ import aboutImg from '../assets/img/hazak-about.jpg';
 
 export const About = () => {
     return (
-        <section id="about" className="py-20 bg-primary">
+        <section id="about" className="py-[1em] bg-primary">
             <div className="container mx-auto px-4">
                 <div className="flex flex-col lg:flex-row items-center gap-12">
                     <div className="lg:w-1/2 relative">

@@ -3,7 +3,7 @@ import bgImage from '../assets/img/operating-hours-bg.png';
 
 export function OperatingHours() {
     return (
-        <section className="py-24 relative overflow-hidden min-h-[600px] flex items-center">
+        <section className="py-[1em] relative overflow-hidden min-h-[600px] flex items-center">
             {/* Background Image with Overlay */}
             <div className="absolute inset-0 z-0">
                 <img

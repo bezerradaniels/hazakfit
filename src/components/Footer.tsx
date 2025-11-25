@@ -2,7 +2,7 @@ import { Phone, Mail, MapPin, Instagram, Facebook } from 'lucide-react';
 
 export const Footer = () => {
     return (
-        <footer id="contact" className="bg-primary text-black pt-20 pb-10">
+        <footer id="contact" className="bg-primary text-black pt-[1em] pb-10">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl font-bold mb-8">Mais Informações</h2>
