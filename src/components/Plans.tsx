@@ -71,7 +71,7 @@ export const Plans = () => {
                 <div className="absolute bottom-20 -right-20 w-96 h-96 bg-primary rounded-full blur-3xl" />
             </div>
 
-            <div className="container mx-auto px-[1em] relative z-10">
+            <div className="container mx-auto px-[1em] md:px-[2em] relative z-10">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Planos e Preços</h2>
                     <p className="text-gray-400 text-lg max-w-2xl mx-auto mb-10">
