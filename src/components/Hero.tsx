@@ -15,7 +15,7 @@ export const Hero = () => {
                 <div className="absolute inset-0 bg-linear-to-t from-dark via-transparent to-transparent" />
             </div>
 
-            <div className="container mx-auto px-4 relative z-10 pt-20">
+            <div className="container mx-auto px-[1em] relative z-10 pt-20">
                 <motion.div
                     initial={{ opacity: 0, x: -50 }}
                     animate={{ opacity: 1, x: 0 }}

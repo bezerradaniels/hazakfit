@@ -23,7 +23,7 @@ export const Login = () => {
     return (
         <div className="min-h-screen bg-dark">
             <Header />
-            <div className="flex items-center justify-center px-4 py-[1em] pt-32">
+            <div className="flex items-center justify-center px-[1em] py-20 pt-32">
                 <div className="bg-dark-lighter p-8 rounded-2xl shadow-2xl w-full max-w-md border border-gray-800">
                     <button
                         onClick={() => navigate('/')}

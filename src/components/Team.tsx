@@ -21,14 +21,14 @@ export const Team = () => {
     };
 
     return (
-        <section id="team" className="py-[1em] bg-dark relative overflow-hidden">
+        <section id="team" className="py-24 bg-dark relative overflow-hidden">
             {/* Background decoration */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-5 pointer-events-none">
                 <div className="absolute top-20 -left-20 w-96 h-96 bg-primary rounded-full blur-3xl" />
                 <div className="absolute bottom-20 -right-20 w-96 h-96 bg-primary rounded-full blur-3xl" />
             </div>
 
-            <div className="container mx-auto px-4 relative z-10">
+            <div className="container mx-auto px-[1em] relative z-10">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Nossa Equipe</h2>
                     <p className="text-gray-400 text-lg max-w-2xl mx-auto">

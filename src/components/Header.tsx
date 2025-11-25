@@ -18,7 +18,7 @@ export const Header = () => {
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-dark/80 backdrop-blur-md py-4 shadow-lg' : 'bg-transparent py-6'
                 }`}
         >
-            <div className="container mx-auto px-4 flex justify-between items-center">
+            <div className="container mx-auto px-[1em] flex justify-between items-center">
                 <a href="#" className="text-2xl font-bold text-primary tracking-tighter">
                     HAZAK <span className="text-white font-light">fit</span>
                 </a>
