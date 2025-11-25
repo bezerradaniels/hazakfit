@@ -3,7 +3,7 @@ import bgImage from '../assets/img/operating-hours-bg.png';
 
 export function OperatingHours() {
     return (
-        <section className="py-[1em] relative overflow-hidden min-h-[600px] flex items-center">
+        <section className="py-24 relative overflow-hidden min-h-[600px] flex items-center">
             {/* Background Image with Overlay */}
             <div className="absolute inset-0 z-0">
                 <img
@@ -14,7 +14,7 @@ export function OperatingHours() {
                 <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/80 to-black/60" />
             </div>
 
-            <div className="container mx-auto px-4 relative z-10">
+            <div className="container mx-auto px-[1em] relative z-10">
                 <motion.h2
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}

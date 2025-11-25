@@ -2,8 +2,8 @@ import aboutImg from '../assets/img/hazak-about.jpg';
 
 export const About = () => {
     return (
-        <section id="about" className="py-[1em] bg-primary">
-            <div className="container mx-auto px-4">
+        <section id="about" className="py-20 bg-primary">
+            <div className="container mx-auto px-[1em]">
                 <div className="flex flex-col lg:flex-row items-center gap-12">
                     <div className="lg:w-1/2 relative">
                         <div className="absolute -inset-4 border-2 border-black rounded-3xl translate-x-4 translate-y-4 hidden md:block" />
