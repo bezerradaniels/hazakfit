@@ -1,5 +1,8 @@
 -- Schema para o banco de dados Supabase do HazakFit
 
+-- Extensão necessária para gen_random_uuid()
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 -- Tabela de planos
 CREATE TABLE IF NOT EXISTS plans (
     id TEXT PRIMARY KEY,
@@ -45,20 +48,47 @@ ALTER TABLE team ENABLE ROW LEVEL SECURITY;
 ALTER TABLE admins ENABLE ROW LEVEL SECURITY;
 
 -- Políticas para plans (todos podem ler, apenas autenticados podem modificar)
+DROP POLICY IF EXISTS "Permitir leitura pública de planos" ON plans;
 CREATE POLICY "Permitir leitura pública de planos" ON plans
     FOR SELECT USING (true);
 
-CREATE POLICY "Permitir modificação de planos por autenticados" ON plans
-    FOR ALL USING (auth.role() = 'authenticated');
+DROP POLICY IF EXISTS "Permitir inserção de planos por autenticados" ON plans;
+CREATE POLICY "Permitir inserção de planos por autenticados" ON plans
+    FOR INSERT TO authenticated
+    WITH CHECK (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "Permitir atualização de planos por autenticados" ON plans;
+CREATE POLICY "Permitir atualização de planos por autenticados" ON plans
+    FOR UPDATE TO authenticated
+    USING (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "Permitir remoção de planos por autenticados" ON plans;
+CREATE POLICY "Permitir remoção de planos por autenticados" ON plans
+    FOR DELETE TO authenticated
+    USING (auth.role() = 'authenticated');
 
 -- Políticas para team (todos podem ler, apenas autenticados podem modificar)
+DROP POLICY IF EXISTS "Permitir leitura pública da equipe" ON team;
 CREATE POLICY "Permitir leitura pública da equipe" ON team
     FOR SELECT USING (true);
 
-CREATE POLICY "Permitir modificação da equipe por autenticados" ON team
-    FOR ALL USING (auth.role() = 'authenticated');
+DROP POLICY IF EXISTS "Permitir inserção de equipe por autenticados" ON team;
+CREATE POLICY "Permitir inserção de equipe por autenticados" ON team
+    FOR INSERT TO authenticated
+    WITH CHECK (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "Permitir atualização de equipe por autenticados" ON team;
+CREATE POLICY "Permitir atualização de equipe por autenticados" ON team
+    FOR UPDATE TO authenticated
+    USING (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "Permitir remoção de equipe por autenticados" ON team;
+CREATE POLICY "Permitir remoção de equipe por autenticados" ON team
+    FOR DELETE TO authenticated
+    USING (auth.role() = 'authenticated');
 
 -- Políticas para admins (apenas autenticados podem acessar)
+DROP POLICY IF EXISTS "Permitir acesso a admins apenas por autenticados" ON admins;
 CREATE POLICY "Permitir acesso a admins apenas por autenticados" ON admins
     FOR ALL USING (auth.role() = 'authenticated');
 
@@ -72,11 +102,32 @@ END;
 $$ language 'plpgsql';
 
 -- Triggers para atualizar updated_at
+DROP TRIGGER IF EXISTS update_plans_updated_at ON plans;
 CREATE TRIGGER update_plans_updated_at BEFORE UPDATE ON plans
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_team_updated_at ON team;
 CREATE TRIGGER update_team_updated_at BEFORE UPDATE ON team
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_admins_updated_at ON admins;
 CREATE TRIGGER update_admins_updated_at BEFORE UPDATE ON admins
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Habilitar Realtime para tabelas (publicação supabase_realtime) somente se ainda não inclusas
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_publication_tables
+        WHERE pubname = 'supabase_realtime' AND schemaname = 'public' AND tablename = 'plans'
+    ) THEN
+        EXECUTE 'ALTER PUBLICATION supabase_realtime ADD TABLE public.plans';
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_publication_tables
+        WHERE pubname = 'supabase_realtime' AND schemaname = 'public' AND tablename = 'team'
+    ) THEN
+        EXECUTE 'ALTER PUBLICATION supabase_realtime ADD TABLE public.team';
+    END IF;
+END $$;

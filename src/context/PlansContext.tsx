@@ -49,36 +49,48 @@ const defaultPlans: Plan[] = [
 ];
 
 export const PlansProvider = ({ children }: { children: ReactNode }) => {
-    const [plans, setPlans] = useState<Plan[]>(defaultPlans);
+    const [plans, setPlans] = useState<Plan[]>([]);
 
     // Carregar planos do Supabase
-    useEffect(() => {
-        const loadPlans = async () => {
-            try {
-                const { data, error } = await supabase
-                    .from('plans')
-                    .select('*')
-                    .order('id');
+    const loadPlans = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('plans')
+                .select('*')
+                .order('id');
 
-                if (error) throw error;
+            if (error) throw error;
 
-                if (data && data.length > 0) {
-                    const loadedPlans = data.map((plan: any) => ({
-                        id: plan.id,
-                        name: plan.name,
-                        icon: defaultPlans.find(p => p.id === plan.id)?.icon || Calendar,
-                        price: plan.price,
-                        features: plan.features,
-                        highlight: plan.highlight
-                    }));
-                    setPlans(loadedPlans);
-                }
-            } catch (error) {
-                console.error('Erro ao carregar planos:', error);
+            if (data && data.length > 0) {
+                const loadedPlans = data.map((plan: any) => ({
+                    id: plan.id,
+                    name: plan.name,
+                    icon: defaultPlans.find(p => p.id === plan.id)?.icon || Calendar,
+                    price: plan.price,
+                    features: plan.features,
+                    highlight: plan.highlight
+                }));
+                setPlans(loadedPlans);
+            } else {
+                setPlans(defaultPlans);
             }
-        };
+        } catch (error) {
+            console.error('Erro ao carregar planos:', error);
+        }
+    };
 
+    useEffect(() => {
         loadPlans();
+        // Realtime subscription for plans
+        const channel = supabase.channel('realtime:plans')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'plans' }, () => {
+                loadPlans();
+            })
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, []);
 
     const updatePlanPrice = async (id: PlanDuration, newPrice: string) => {
@@ -90,9 +102,7 @@ export const PlansProvider = ({ children }: { children: ReactNode }) => {
 
             if (error) throw error;
 
-            setPlans(prev => prev.map(plan =>
-                plan.id === id ? { ...plan, price: newPrice } : plan
-            ));
+            await loadPlans();
         } catch (error) {
             console.error('Erro ao atualizar preço:', error);
             throw error;
@@ -108,9 +118,7 @@ export const PlansProvider = ({ children }: { children: ReactNode }) => {
 
             if (error) throw error;
 
-            setPlans(prev => prev.map(plan =>
-                plan.id === id ? { ...plan, features: newFeatures } : plan
-            ));
+            await loadPlans();
         } catch (error) {
             console.error('Erro ao atualizar features:', error);
             throw error;

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { supabase } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
 import { Lock, ArrowLeft } from 'lucide-react';
 import { Header } from '../components/Header';
@@ -9,14 +10,20 @@ export const Login = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Simple mock authentication
-        if (username === 'admin' && password === 'hazak123') {
+        setError('');
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: username,
+            password
+        });
+        if (error) {
+            setError('Credenciais inválidas');
+            return;
+        }
+        if (data.session) {
             localStorage.setItem('isAuthenticated', 'true');
             navigate('/admin');
-        } else {
-            setError('Credenciais inválidas');
         }
     };
 
@@ -43,13 +50,13 @@ export const Login = () => {
 
                     <form onSubmit={handleLogin} className="space-y-6">
                         <div>
-                            <label className="block text-sm font-medium text-gray-400 mb-2">Usuário</label>
+                            <label className="block text-sm font-medium text-gray-400 mb-2">Email</label>
                             <input
                                 type="text"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 className="w-full bg-dark border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors"
-                                placeholder="Digite seu usuário"
+                                placeholder="Digite seu email"
                             />
                         </div>
                         <div>

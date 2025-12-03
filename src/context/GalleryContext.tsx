@@ -19,37 +19,39 @@ const GalleryContext = createContext<GalleryContextType | undefined>(undefined);
 const defaultImages = [img1, img2, img3, img4, img5, img6];
 
 export const GalleryProvider = ({ children }: { children: ReactNode }) => {
-    const [images, setImages] = useState<string[]>(defaultImages);
+    const [images, setImages] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
 
     // Carregar imagens do Supabase
-    useEffect(() => {
-        const loadImages = async () => {
-            try {
-                const { data, error } = await supabase.storage
-                    .from(IMAGES_BUCKET)
-                    .list('gallery', {
-                        sortBy: { column: 'created_at', order: 'desc' }
-                    });
+    const loadImages = async () => {
+        try {
+            const { data, error } = await supabase.storage
+                .from(IMAGES_BUCKET)
+                .list('gallery', {
+                    sortBy: { column: 'created_at', order: 'desc' }
+                });
 
-                if (error) throw error;
+            if (error) throw error;
 
-                if (data && data.length > 0) {
-                    const imageUrls = data.map(file => {
-                        const { data: urlData } = supabase.storage
-                            .from(IMAGES_BUCKET)
-                            .getPublicUrl(`gallery/${file.name}`);
-                        return urlData.publicUrl;
-                    });
-                    setImages(imageUrls);
-                }
-            } catch (error) {
-                console.error('Erro ao carregar imagens:', error);
-            } finally {
-                setLoading(false);
+            if (data && data.length > 0) {
+                const imageUrls = data.map(file => {
+                    const { data: urlData } = supabase.storage
+                        .from(IMAGES_BUCKET)
+                        .getPublicUrl(`gallery/${file.name}`);
+                    return urlData.publicUrl;
+                });
+                setImages(imageUrls);
+            } else {
+                setImages(defaultImages);
             }
-        };
+        } catch (error) {
+            console.error('Erro ao carregar imagens:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         loadImages();
     }, []);
 
@@ -69,11 +71,7 @@ export const GalleryProvider = ({ children }: { children: ReactNode }) => {
 
             if (uploadError) throw uploadError;
 
-            const { data: urlData } = supabase.storage
-                .from(IMAGES_BUCKET)
-                .getPublicUrl(filePath);
-
-            setImages(prev => [...prev, urlData.publicUrl]);
+            await loadImages();
         } catch (error) {
             console.error('Erro ao adicionar imagem:', error);
             throw error;
@@ -94,7 +92,7 @@ export const GalleryProvider = ({ children }: { children: ReactNode }) => {
                 if (error) throw error;
             }
 
-            setImages(prev => prev.filter(img => img !== imageUrl));
+            await loadImages();
         } catch (error) {
             console.error('Erro ao remover imagem:', error);
             throw error;

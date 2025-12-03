@@ -21,31 +21,43 @@ const TeamContext = createContext<TeamContextType | undefined>(undefined);
 const defaultTeam: TeamMember[] = [];
 
 export const TeamProvider = ({ children }: { children: ReactNode }) => {
-    const [team, setTeam] = useState<TeamMember[]>(defaultTeam);
+    const [team, setTeam] = useState<TeamMember[]>([]);
     const [loading, setLoading] = useState(true);
 
     // Carregar equipe do Supabase
-    useEffect(() => {
-        const loadTeam = async () => {
-            try {
-                const { data, error } = await supabase
-                    .from('team')
-                    .select('*')
-                    .order('created_at', { ascending: true });
+    const loadTeam = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('team')
+                .select('*')
+                .order('created_at', { ascending: true });
 
-                if (error) throw error;
+            if (error) throw error;
 
-                if (data) {
-                    setTeam(data);
-                }
-            } catch (error) {
-                console.error('Erro ao carregar equipe:', error);
-            } finally {
-                setLoading(false);
+            if (data && data.length > 0) {
+                setTeam(data);
+            } else {
+                setTeam(defaultTeam);
             }
-        };
+        } catch (error) {
+            console.error('Erro ao carregar equipe:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         loadTeam();
+        // Realtime subscription for team
+        const channel = supabase.channel('realtime:team')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'team' }, () => {
+                loadTeam();
+            })
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, []);
 
     const addTeamMember = async (name: string, role: string, photoFile: File) => {
@@ -66,15 +78,13 @@ export const TeamProvider = ({ children }: { children: ReactNode }) => {
                 .getPublicUrl(filePath);
 
             // Adicionar membro ao banco
-            const { data, error } = await supabase
+            const { error } = await supabase
                 .from('team')
-                .insert([{ name, role, photo: urlData.publicUrl }])
-                .select()
-                .single();
+                .insert([{ name, role, photo: urlData.publicUrl }]);
 
             if (error) throw error;
 
-            setTeam(prev => [...prev, data]);
+            await loadTeam();
         } catch (error) {
             console.error('Erro ao adicionar membro:', error);
             throw error;
@@ -114,9 +124,7 @@ export const TeamProvider = ({ children }: { children: ReactNode }) => {
 
             if (error) throw error;
 
-            setTeam(prev => prev.map(member =>
-                member.id === id ? { ...member, ...updates } : member
-            ));
+            await loadTeam();
         } catch (error) {
             console.error('Erro ao atualizar membro:', error);
             throw error;
@@ -145,7 +153,7 @@ export const TeamProvider = ({ children }: { children: ReactNode }) => {
 
             if (error) throw error;
 
-            setTeam(prev => prev.filter(member => member.id !== id));
+            await loadTeam();
         } catch (error) {
             console.error('Erro ao remover membro:', error);
             throw error;

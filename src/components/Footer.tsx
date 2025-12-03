@@ -45,7 +45,7 @@ export const Footer = () => {
 
 
                     <div className="text-sm font-medium opacity-70">
-                        Desenvolvido por <a href="https://danibezerra.com" target="_blank" rel="noopener noreferrer">Daniel Bezerra</a>
+                        Desenvolvido por <a href="https://dani.dev.br" target="_blank" rel="noopener noreferrer">Daniel Bezerra</a>
                     </div>
 
                     <div className="flex gap-4">

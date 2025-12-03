@@ -43,7 +43,7 @@ export const Dashboard = () => {
     const galleryFileInputRef = useRef<HTMLInputElement>(null);
 
     // Pending uploads
-    const [pendingGalleryImage, setPendingGalleryImage] = useState<string | null>(null);
+    const [pendingGalleryImage, setPendingGalleryImage] = useState<File | null>(null);
 
     useEffect(() => {
         const isAuthenticated = localStorage.getItem('isAuthenticated');
@@ -76,14 +76,22 @@ export const Dashboard = () => {
     };
 
     // Plans handlers
-    const handleSavePrice = (id: PlanDuration) => {
-        updatePlanPrice(id, localPrices[id]);
-        showSuccessToast('Preço atualizado com sucesso!');
+    const handleSavePrice = async (id: PlanDuration) => {
+        try {
+            await updatePlanPrice(id, localPrices[id]);
+            showSuccessToast('Preço atualizado com sucesso!');
+        } catch (e) {
+            showSuccessToast('Erro ao atualizar preço!');
+        }
     };
 
-    const handleSaveFeatures = (id: PlanDuration) => {
-        updatePlanFeatures(id, localFeatures[id]);
-        showSuccessToast('Benefícios atualizados com sucesso!');
+    const handleSaveFeatures = async (id: PlanDuration) => {
+        try {
+            await updatePlanFeatures(id, localFeatures[id]);
+            showSuccessToast('Benefícios atualizados com sucesso!');
+        } catch (e) {
+            showSuccessToast('Erro ao atualizar benefícios!');
+        }
     };
 
     const handleAddFeature = (id: PlanDuration) => {
@@ -107,13 +115,8 @@ export const Dashboard = () => {
     const handleGalleryImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file && images.length < 10) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPendingGalleryImage(reader.result as string);
-            };
-            reader.readAsDataURL(file);
+            setPendingGalleryImage(file);
         }
-        // Reset input
         if (galleryFileInputRef.current) {
             galleryFileInputRef.current.value = '';
         }
@@ -121,9 +124,12 @@ export const Dashboard = () => {
 
     const confirmGalleryUpload = () => {
         if (pendingGalleryImage) {
-            addImage(pendingGalleryImage);
-            setPendingGalleryImage(null);
-            showSuccessToast('Imagem adicionada com sucesso!');
+            addImage(pendingGalleryImage)
+                .then(() => {
+                    setPendingGalleryImage(null);
+                    showSuccessToast('Imagem adicionada com sucesso!');
+                })
+                .catch(() => showSuccessToast('Erro ao adicionar imagem!'));
         }
     };
 
@@ -132,34 +138,47 @@ export const Dashboard = () => {
     };
 
     // Team handlers
+    const [newMemberPhotoFile, setNewMemberPhotoFile] = useState<File | null>(null);
+    const [editingMemberPhotoFile, setEditingMemberPhotoFile] = useState<File | null>(null);
     const handleTeamPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>, isEdit: boolean = false) => {
         const file = e.target.files?.[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                if (isEdit && editingMember) {
-                    setEditingMember({ ...editingMember, photo: reader.result as string });
-                } else {
-                    setNewMember({ ...newMember, photo: reader.result as string });
-                }
-            };
-            reader.readAsDataURL(file);
+            if (isEdit && editingMember) {
+                setEditingMemberPhotoFile(file);
+                setEditingMember({ ...editingMember, photo: URL.createObjectURL(file) });
+            } else {
+                setNewMemberPhotoFile(file);
+                setNewMember({ ...newMember, photo: URL.createObjectURL(file) });
+            }
         }
     };
 
     const handleAddTeamMember = () => {
-        if (newMember.name && newMember.role && newMember.photo) {
-            addTeamMember(newMember);
-            setNewMember({ name: '', role: '', photo: '' });
-            showSuccessToast('Membro adicionado com sucesso!');
+        if (newMember.name && newMember.role && newMemberPhotoFile) {
+            addTeamMember(newMember.name, newMember.role, newMemberPhotoFile)
+                .then(() => {
+                    setNewMember({ name: '', role: '', photo: '' });
+                    setNewMemberPhotoFile(null);
+                    showSuccessToast('Membro adicionado com sucesso!');
+                })
+                .catch(() => showSuccessToast('Erro ao adicionar membro!'));
         }
     };
 
     const handleUpdateTeamMember = () => {
         if (editingMember) {
-            updateTeamMember(editingMember.id, editingMember);
-            setEditingMember(null);
-            showSuccessToast('Membro atualizado com sucesso!');
+            updateTeamMember(
+                editingMember.id,
+                editingMember.name,
+                editingMember.role,
+                editingMemberPhotoFile || undefined
+            )
+                .then(() => {
+                    setEditingMember(null);
+                    setEditingMemberPhotoFile(null);
+                    showSuccessToast('Membro atualizado com sucesso!');
+                })
+                .catch(() => showSuccessToast('Erro ao atualizar membro!'));
         }
     };
 
@@ -329,7 +348,7 @@ export const Dashboard = () => {
                                     <div className="bg-dark-lighter p-6 rounded-xl border border-gray-800">
                                         <h3 className="text-lg font-bold mb-4">Pré-visualização da Imagem</h3>
                                         <div className="aspect-video rounded-lg overflow-hidden bg-gray-800 mb-4 max-w-md">
-                                            <img src={pendingGalleryImage} alt="Preview" className="w-full h-full object-cover" />
+                                            <img src={URL.createObjectURL(pendingGalleryImage)} alt="Preview" className="w-full h-full object-cover" />
                                         </div>
                                         <div className="flex gap-3">
                                             <button
@@ -365,7 +384,7 @@ export const Dashboard = () => {
                                     <div key={index} className="relative group aspect-video rounded-lg overflow-hidden bg-gray-800">
                                         <img src={img} alt={`Gallery ${index + 1}`} className="w-full h-full object-cover" />
                                         <button
-                                            onClick={() => removeImage(index)}
+                                            onClick={() => removeImage(img)}
                                             className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                                         >
                                             <X size={16} />
