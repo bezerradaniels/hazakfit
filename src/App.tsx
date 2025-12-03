@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { PlansProvider } from './context/PlansContext';
 import { TeamProvider } from './context/TeamContext';
 import { GalleryProvider } from './context/GalleryContext';
@@ -9,11 +9,9 @@ function App() {
     <GalleryProvider>
       <TeamProvider>
         <PlansProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Home />} />              
-            </Routes>
-          </BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />              
+          </Routes>
         </PlansProvider>
       </TeamProvider>
     </GalleryProvider>
