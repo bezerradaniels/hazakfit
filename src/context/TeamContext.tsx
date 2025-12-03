@@ -1,17 +1,19 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { supabase, IMAGES_BUCKET } from '../lib/supabase';
 
 export interface TeamMember {
     id: string;
     name: string;
     role: string;
-    photo: string; // base64 or URL
+    photo: string; // URL
 }
 
 interface TeamContextType {
     team: TeamMember[];
-    addTeamMember: (member: Omit<TeamMember, 'id'>) => void;
-    updateTeamMember: (id: string, member: Partial<TeamMember>) => void;
-    removeTeamMember: (id: string) => void;
+    loading: boolean;
+    addTeamMember: (name: string, role: string, photoFile: File) => Promise<void>;
+    updateTeamMember: (id: string, name?: string, role?: string, photoFile?: File) => Promise<void>;
+    removeTeamMember: (id: string) => Promise<void>;
 }
 
 const TeamContext = createContext<TeamContextType | undefined>(undefined);
@@ -19,42 +21,139 @@ const TeamContext = createContext<TeamContextType | undefined>(undefined);
 const defaultTeam: TeamMember[] = [];
 
 export const TeamProvider = ({ children }: { children: ReactNode }) => {
-    const [team, setTeam] = useState<TeamMember[]>(() => {
-        const stored = localStorage.getItem('hazakfit-team');
-        if (stored) {
-            try {
-                return JSON.parse(stored);
-            } catch {
-                return defaultTeam;
-            }
-        }
-        return defaultTeam;
-    });
+    const [team, setTeam] = useState<TeamMember[]>(defaultTeam);
+    const [loading, setLoading] = useState(true);
 
+    // Carregar equipe do Supabase
     useEffect(() => {
-        localStorage.setItem('hazakfit-team', JSON.stringify(team));
-    }, [team]);
+        const loadTeam = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('team')
+                    .select('*')
+                    .order('created_at', { ascending: true });
 
-    const addTeamMember = (member: Omit<TeamMember, 'id'>) => {
-        const newMember = {
-            ...member,
-            id: Date.now().toString()
+                if (error) throw error;
+
+                if (data) {
+                    setTeam(data);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar equipe:', error);
+            } finally {
+                setLoading(false);
+            }
         };
-        setTeam(prev => [...prev, newMember]);
+
+        loadTeam();
+    }, []);
+
+    const addTeamMember = async (name: string, role: string, photoFile: File) => {
+        try {
+            // Upload da foto
+            const fileExt = photoFile.name.split('.').pop();
+            const fileName = `${Date.now()}.${fileExt}`;
+            const filePath = `team/${fileName}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from(IMAGES_BUCKET)
+                .upload(filePath, photoFile);
+
+            if (uploadError) throw uploadError;
+
+            const { data: urlData } = supabase.storage
+                .from(IMAGES_BUCKET)
+                .getPublicUrl(filePath);
+
+            // Adicionar membro ao banco
+            const { data, error } = await supabase
+                .from('team')
+                .insert([{ name, role, photo: urlData.publicUrl }])
+                .select()
+                .single();
+
+            if (error) throw error;
+
+            setTeam(prev => [...prev, data]);
+        } catch (error) {
+            console.error('Erro ao adicionar membro:', error);
+            throw error;
+        }
     };
 
-    const updateTeamMember = (id: string, updates: Partial<TeamMember>) => {
-        setTeam(prev => prev.map(member =>
-            member.id === id ? { ...member, ...updates } : member
-        ));
+    const updateTeamMember = async (id: string, name?: string, role?: string, photoFile?: File) => {
+        try {
+            const updates: Partial<TeamMember> = {};
+            
+            if (name) updates.name = name;
+            if (role) updates.role = role;
+            
+            if (photoFile) {
+                // Upload da nova foto
+                const fileExt = photoFile.name.split('.').pop();
+                const fileName = `${Date.now()}.${fileExt}`;
+                const filePath = `team/${fileName}`;
+
+                const { error: uploadError } = await supabase.storage
+                    .from(IMAGES_BUCKET)
+                    .upload(filePath, photoFile);
+
+                if (uploadError) throw uploadError;
+
+                const { data: urlData } = supabase.storage
+                    .from(IMAGES_BUCKET)
+                    .getPublicUrl(filePath);
+
+                updates.photo = urlData.publicUrl;
+            }
+
+            const { error } = await supabase
+                .from('team')
+                .update(updates)
+                .eq('id', id);
+
+            if (error) throw error;
+
+            setTeam(prev => prev.map(member =>
+                member.id === id ? { ...member, ...updates } : member
+            ));
+        } catch (error) {
+            console.error('Erro ao atualizar membro:', error);
+            throw error;
+        }
     };
 
-    const removeTeamMember = (id: string) => {
-        setTeam(prev => prev.filter(member => member.id !== id));
+    const removeTeamMember = async (id: string) => {
+        try {
+            const member = team.find(m => m.id === id);
+            
+            if (member?.photo) {
+                // Remover foto do storage
+                const urlParts = member.photo.split('/storage/v1/object/public/' + IMAGES_BUCKET + '/');
+                if (urlParts.length > 1) {
+                    const filePath = urlParts[1];
+                    await supabase.storage
+                        .from(IMAGES_BUCKET)
+                        .remove([filePath]);
+                }
+            }
+
+            const { error } = await supabase
+                .from('team')
+                .delete()
+                .eq('id', id);
+
+            if (error) throw error;
+
+            setTeam(prev => prev.filter(member => member.id !== id));
+        } catch (error) {
+            console.error('Erro ao remover membro:', error);
+            throw error;
+        }
     };
 
     return (
-        <TeamContext.Provider value={{ team, addTeamMember, updateTeamMember, removeTeamMember }}>
+        <TeamContext.Provider value={{ team, loading, addTeamMember, updateTeamMember, removeTeamMember }}>
             {children}
         </TeamContext.Provider>
     );

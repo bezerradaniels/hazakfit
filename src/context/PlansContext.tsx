@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { supabase } from '../lib/supabase';
 import { Calendar, Zap, Trophy } from 'lucide-react';
 
 export type PlanDuration = 'monthly' | 'quarterly' | 'yearly';
@@ -48,40 +49,72 @@ const defaultPlans: Plan[] = [
 ];
 
 export const PlansProvider = ({ children }: { children: ReactNode }) => {
-    const [plans, setPlans] = useState<Plan[]>(() => {
-        // Load from localStorage on initialization
-        const stored = localStorage.getItem('hazakfit-plans');
-        if (stored) {
-            try {
-                const parsedPlans = JSON.parse(stored);
-                // Restore icon references
-                return parsedPlans.map((plan: Plan) => ({
-                    ...plan,
-                    icon: defaultPlans.find(p => p.id === plan.id)?.icon || Calendar
-                }));
-            } catch {
-                return defaultPlans;
-            }
-        }
-        return defaultPlans;
-    });
+    const [plans, setPlans] = useState<Plan[]>(defaultPlans);
 
-    // Save to localStorage whenever plans change
+    // Carregar planos do Supabase
     useEffect(() => {
-        const plansToStore = plans.map(({ icon, ...rest }) => rest);
-        localStorage.setItem('hazakfit-plans', JSON.stringify(plansToStore));
-    }, [plans]);
+        const loadPlans = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('plans')
+                    .select('*')
+                    .order('id');
 
-    const updatePlanPrice = (id: PlanDuration, newPrice: string) => {
-        setPlans(prev => prev.map(plan =>
-            plan.id === id ? { ...plan, price: newPrice } : plan
-        ));
+                if (error) throw error;
+
+                if (data && data.length > 0) {
+                    const loadedPlans = data.map((plan: any) => ({
+                        id: plan.id,
+                        name: plan.name,
+                        icon: defaultPlans.find(p => p.id === plan.id)?.icon || Calendar,
+                        price: plan.price,
+                        features: plan.features,
+                        highlight: plan.highlight
+                    }));
+                    setPlans(loadedPlans);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar planos:', error);
+            }
+        };
+
+        loadPlans();
+    }, []);
+
+    const updatePlanPrice = async (id: PlanDuration, newPrice: string) => {
+        try {
+            const { error } = await supabase
+                .from('plans')
+                .update({ price: newPrice })
+                .eq('id', id);
+
+            if (error) throw error;
+
+            setPlans(prev => prev.map(plan =>
+                plan.id === id ? { ...plan, price: newPrice } : plan
+            ));
+        } catch (error) {
+            console.error('Erro ao atualizar preço:', error);
+            throw error;
+        }
     };
 
-    const updatePlanFeatures = (id: PlanDuration, newFeatures: string[]) => {
-        setPlans(prev => prev.map(plan =>
-            plan.id === id ? { ...plan, features: newFeatures } : plan
-        ));
+    const updatePlanFeatures = async (id: PlanDuration, newFeatures: string[]) => {
+        try {
+            const { error } = await supabase
+                .from('plans')
+                .update({ features: newFeatures })
+                .eq('id', id);
+
+            if (error) throw error;
+
+            setPlans(prev => prev.map(plan =>
+                plan.id === id ? { ...plan, features: newFeatures } : plan
+            ));
+        } catch (error) {
+            console.error('Erro ao atualizar features:', error);
+            throw error;
+        }
     };
 
     return (
