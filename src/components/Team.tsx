@@ -92,6 +92,7 @@ export const Team = () => {
                     {team.length > 1 && (
                         <div className="flex justify-center items-center gap-4 mt-6">
                             <button
+                                id="team-prev-btn"
                                 onClick={prevSlide}
                                 className="bg-primary hover:bg-primary-hover text-black p-3 rounded-full transition-colors"
                             >
@@ -101,6 +102,7 @@ export const Team = () => {
                                 {currentIndex + 1} / {team.length}
                             </div>
                             <button
+                                id="team-next-btn"
                                 onClick={nextSlide}
                                 className="bg-primary hover:bg-primary-hover text-black p-3 rounded-full transition-colors"
                             >

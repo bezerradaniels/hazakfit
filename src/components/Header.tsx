@@ -29,6 +29,7 @@ export const Header = () => {
                     <a href="#structure" className="hover:text-primary transition-colors">Estrutura</a>
                     <a href="#plans" className="hover:text-primary transition-colors">Planos</a>
                     <a
+                        id="header-assine-agora-btn"
                         href="https://api.whatsapp.com/send?phone=5577998620419&text=Ola,%20gostaria%20de%20saber%20mais%20sobre%20a%20Hazak!"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -39,6 +40,7 @@ export const Header = () => {
                 </nav>
 
                 <button
+                    id="mobile-menu-toggle"
                     className="md:hidden text-white p-2"
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
@@ -54,6 +56,7 @@ export const Header = () => {
                     <a href="#structure" onClick={() => setIsMobileMenuOpen(false)} className="text-white text-lg hover:text-primary">Estrutura</a>
                     <a href="#plans" onClick={() => setIsMobileMenuOpen(false)} className="text-white text-lg hover:text-primary">Planos</a>
                     <a
+                        id="mobile-assine-agora-btn"
                         href="https://api.whatsapp.com/send?phone=5577998620419&text=Ola,%20gostaria%20de%20saber%20mais%20sobre%20a%20Hazak!"
                         target="_blank"
                         rel="noopener noreferrer"

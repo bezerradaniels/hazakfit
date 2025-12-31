@@ -30,6 +30,7 @@ export const Toast = ({ message, show, onClose }: ToastProps) => {
                     <CheckCircle size={24} className="shrink-0" />
                     <span className="font-bold">{message}</span>
                     <button
+                        id="toast-close-btn"
                         onClick={onClose}
                         className="ml-2 hover:bg-black/10 rounded-full p-1 transition-colors"
                     >

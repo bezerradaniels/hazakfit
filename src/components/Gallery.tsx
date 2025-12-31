@@ -85,12 +85,14 @@ export const Gallery = () => {
 
                     {/* Navigation Buttons */}
                     <button
+                        id="gallery-prev-btn"
                         className="absolute top-1/2 left-4 -translate-y-1/2 bg-white/80 hover:bg-white text-black p-3 rounded-full shadow-lg backdrop-blur-sm transition-all z-10"
                         onClick={() => paginate(-1)}
                     >
                         <ChevronLeft size={24} />
                     </button>
                     <button
+                        id="gallery-next-btn"
                         className="absolute top-1/2 right-4 -translate-y-1/2 bg-white/80 hover:bg-white text-black p-3 rounded-full shadow-lg backdrop-blur-sm transition-all z-10"
                         onClick={() => paginate(1)}
                     >
@@ -101,6 +103,7 @@ export const Gallery = () => {
                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
                         {images.map((_, index) => (
                             <button
+                                id={`gallery-dot-${index}-btn`}
                                 key={index}
                                 onClick={() => {
                                     setDirection(index > currentIndex ? 1 : -1);

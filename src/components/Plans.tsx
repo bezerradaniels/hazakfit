@@ -51,6 +51,7 @@ export const Plans = () => {
             </div>
 
             <a
+                id={`plan-${plan.id}-cta-btn`}
                 href={`https://api.whatsapp.com/send?phone=5577998620419&text=Ola,%20gostaria%20de%20assinar%20o%20plano%20${plan.name}!`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -84,6 +85,7 @@ export const Plans = () => {
                         <div className="inline-flex bg-dark p-1.5 rounded-full border border-gray-800 shadow-inner">
                             {plans.map((plan) => (
                                 <button
+                                    id={`plan-${plan.id}-btn`}
                                     key={plan.id}
                                     onClick={() => setActivePlan(plan.id as PlanDuration)}
                                     className={`px-4 py-2 rounded-full text-sm font-bold transition-all duration-300 ${activePlan === plan.id
@@ -119,6 +121,7 @@ export const Plans = () => {
                 {/* WhatsApp Contact Button */}
                 <div className="flex justify-center">
                     <a
+                        id="plans-contact-btn"
                         href="https://api.whatsapp.com/send?phone=5577998620419&text=Ola,%20gostaria%20de%20conhecer%20outros%20planos%20disponiveis!"
                         target="_blank"
                         rel="noopener noreferrer"

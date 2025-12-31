@@ -8,11 +8,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit();
 }
 
-// Database configuration
+// Database configuration for other API endpoints
 $host = 'localhost';
 $db_name = 'u602431092_hazakfit';
 $username = 'u602431092_hazakfit';
-$password = 'Haz@kFit2026!'; // <--- ATENÇÃO: Substitua 'YourPassword123!' pela senha real do seu banco de dados Hostinger
+$password = 'Haz@kFit2026!';
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8", $username, $password);
