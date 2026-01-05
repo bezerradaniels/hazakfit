@@ -3,6 +3,37 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Check, Star, MessageCircle } from 'lucide-react';
 import { usePlans, type PlanDuration } from '../context/PlansContext';
 
+// ============================================
+// OUTROS PLANOS - Edite os valores aqui
+// ============================================
+const outrosPlanos = [
+    {
+        id: 'amigos',
+        nome: 'Plano AMIGOS',
+        preco: '114,90',
+        descricao: 'A partir de duas pessoas',
+    },
+    {
+        id: 'estudantil',
+        nome: 'Plano ESTUDANTIL',
+        preco: '89,90',
+        descricao: 'Sem fidelidade',
+    },
+    {
+        id: '3x',
+        nome: 'Plano 3X',
+        preco: '94,90',
+        descricao: 'Escolha até 3 dias na semana',
+    },
+    {
+        id: '4x',
+        nome: 'Plano 4X',
+        preco: '100,00',
+        descricao: 'Escolha até 4 dias na semana',
+    },
+];
+// ============================================
+
 export const Plans = () => {
     const { plans } = usePlans();
     const [activePlan, setActivePlan] = useState<PlanDuration>('monthly');
@@ -118,6 +149,50 @@ export const Plans = () => {
                     </AnimatePresence>
                 </div>
 
+                {/* Outros Planos Section */}
+                <div className="mt-20 mb-16">
+                    <h3 className="text-2xl md:text-3xl font-bold text-white text-center mb-10">
+                        Outros Planos
+                    </h3>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {outrosPlanos.map((plano) => (
+                            <motion.a
+                                key={plano.id}
+                                id={`outros-planos-${plano.id}-btn`}
+                                href={`https://api.whatsapp.com/send?phone=5577998620419&text=Ola,%20gostaria%20de%20saber%20mais%20sobre%20o%20${encodeURIComponent(plano.nome)}!`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                className="group bg-dark rounded-2xl border border-gray-800 hover:border-primary/50 transition-all duration-300 overflow-hidden"
+                            >
+                                <div className="p-6">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <h4 className="text-white font-bold text-lg group-hover:text-primary transition-colors">
+                                            {plano.nome}
+                                        </h4>
+                                        <span className="text-primary font-bold text-lg">
+                                            R$ {plano.preco}
+                                        </span>
+                                    </div>
+                                    <p className="text-gray-400 text-sm">
+                                        {plano.descricao}
+                                    </p>
+                                </div>
+                                <div className="bg-gray-800/50 group-hover:bg-primary/10 px-6 py-3 transition-colors">
+                                    <span className="text-xs text-gray-500 group-hover:text-primary/80 font-medium transition-colors">
+                                        Clique para saber mais →
+                                    </span>
+                                </div>
+                            </motion.a>
+                        ))}
+                    </div>
+                </div>
+
                 {/* WhatsApp Contact Button */}
                 <div className="flex justify-center">
                     <a
@@ -128,7 +203,7 @@ export const Plans = () => {
                         className="inline-flex items-center gap-2 px-8 py-4 bg-green-600 hover:bg-green-500 text-white rounded-full font-bold transition-all duration-300 shadow-lg hover:shadow-green-500/25"
                     >
                         <MessageCircle size={20} />
-                        Conhecer outros planos
+                        Fazer minha matrícula
                     </a>
                 </div>
             </div>

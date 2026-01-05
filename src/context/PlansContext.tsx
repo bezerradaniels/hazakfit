@@ -31,7 +31,7 @@ const defaultPlans: Plan[] = [
         id: 'quarterly',
         name: 'Trimestral',
         icon: Zap,
-        price: '107',
+        price: '110',
         features: ['Acesso total à academia', 'Sem taxa de matrícula', 'Acompanhamento profissional', 'Horário livre', 'Contrato de 3 meses'],
         highlight: false
     },
@@ -40,7 +40,7 @@ const defaultPlans: Plan[] = [
         name: 'Anual',
         icon: Trophy,
         price: '83',
-        features: ['Acesso total à academia', 'Sem taxa de matrícula', 'Acompanhamento profissional', 'Horário livre', 'Melhor custo-benefício'],
+        features: ['Acesso total à academia', 'Sem taxa de matrícula', 'Acompanhamento profissional', 'Horário livre', 'Contrato de 12 meses'],
         highlight: true
     }
 ];
