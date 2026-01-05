@@ -11,7 +11,7 @@ const outrosPlanos = [
         id: 'amigos',
         nome: 'Plano AMIGOS',
         preco: '114,90',
-        descricao: 'A partir de duas pessoas',
+        descricao: 'Mínimo de 2 pessoas',
     },
     {
         id: 'estudantil',
@@ -69,7 +69,7 @@ export const Plans = () => {
                 <span className={`text-5xl font-bold ${plan.highlight ? 'text-primary' : 'text-white'}`}>
                     {plan.price}
                 </span>
-                <span className="text-sm text-gray-400 mb-1">/mês</span>
+                <span className="text-sm text-gray-400 mb-1"></span>
             </div>
 
             <div className="flex-1 space-y-4 mb-8">
@@ -132,7 +132,7 @@ export const Plans = () => {
                 </div>
 
                 {/* Desktop Grid */}
-                <div className="hidden md:grid grid-cols-3 gap-6 mb-16">
+                <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
                     {plans.map((plan) => (
                         <PlanCard key={plan.id} plan={plan} />
                     ))}
@@ -152,7 +152,7 @@ export const Plans = () => {
                 {/* Outros Planos Section */}
                 <div className="mt-20 mb-16">
                     <h3 className="text-2xl md:text-3xl font-bold text-white text-center mb-10">
-                        Outros Planos
+                        Outros Planos (valores mensais)
                     </h3>
                     
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

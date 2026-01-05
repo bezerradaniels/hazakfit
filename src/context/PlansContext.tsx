@@ -1,7 +1,7 @@
 import { createContext, useContext, type ReactNode } from 'react';
-import { Calendar, Zap, Trophy } from 'lucide-react';
+import { Calendar, Zap, Clock, Trophy } from 'lucide-react';
 
-export type PlanDuration = 'monthly' | 'quarterly' | 'yearly';
+export type PlanDuration = 'monthly' | 'quarterly' | 'semiannual' | 'yearly';
 
 export interface Plan {
     id: PlanDuration;
@@ -23,7 +23,7 @@ const defaultPlans: Plan[] = [
         id: 'monthly',
         name: 'Mensal',
         icon: Calendar,
-        price: '129',
+        price: '129,90',
         features: ['Acesso total à academia', 'Sem taxa de matrícula', 'Acompanhamento profissional', 'Horário livre', 'Sem fidelidade'],
         highlight: false
     },
@@ -31,16 +31,24 @@ const defaultPlans: Plan[] = [
         id: 'quarterly',
         name: 'Trimestral',
         icon: Zap,
-        price: '110',
-        features: ['Acesso total à academia', 'Sem taxa de matrícula', 'Acompanhamento profissional', 'Horário livre', 'Contrato de 3 meses'],
+        price: '330',
+        features: ['Acesso total à academia', 'Sem taxa de matrícula', 'Acompanhamento profissional', 'Horário livre', 'Pague em até 3x'],
+        highlight: false
+    },
+    {
+        id: 'semiannual',
+        name: 'Semestral',
+        icon: Clock,
+        price: '635',
+        features: ['Acesso total à academia', 'Sem taxa de matrícula', 'Acompanhamento profissional', 'Horário livre', 'Pague em até 3x'],
         highlight: false
     },
     {
         id: 'yearly',
         name: 'Anual',
         icon: Trophy,
-        price: '83',
-        features: ['Acesso total à academia', 'Sem taxa de matrícula', 'Acompanhamento profissional', 'Horário livre', 'Contrato de 12 meses'],
+        price: '1.080',
+        features: ['Acesso total à academia', 'Sem taxa de matrícula', 'Acompanhamento profissional', 'Horário livre', 'À vista ou R$1.200 em até 10x'],
         highlight: true
     }
 ];

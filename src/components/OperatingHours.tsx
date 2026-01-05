@@ -11,7 +11,7 @@ export function OperatingHours() {
                     alt="Background Gym"
                     className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/80 to-black/60" />
+                <div className="absolute inset-0 bg-linear-to-r from-black/90 via-black/80 to-black/60" />
             </div>
 
             <div className="container mx-auto px-[1em] md:px-[2em] relative z-10">
